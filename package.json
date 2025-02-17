@@ -29,6 +29,6 @@
     "dev": "ts-node-dev src/server.ts",
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node server.js"
   }
 }

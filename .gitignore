@@ -1,0 +1,35 @@
+# Ignorar dependências do Node.js
+node_modules/
+npm-debug.log*
+yarn-error.log
+pnpm-debug.log*
+
+# Ignorar variáveis de ambiente
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Ignorar logs
+logs
+*.log
+logs/**/*.log
+
+# Ignorar arquivos de compilação
+dist/
+build/
+out/
+
+# Ignorar cache do editor
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Ignorar dependências lock (opcional, exceto package-lock.json ou yarn.lock)
+# Se você usa apenas um gerenciador de pacotes, pode remover os outros
+.pnpm-store/
+.yarn/
+.yarn-cache/

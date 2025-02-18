@@ -11,7 +11,7 @@ const options: swaggerJsdoc.Options = {
       version: "1.0.0",
       description: "Documentação da API de autenticação com JWT",
     },
-    servers: [{ url: "http://localhost:3000" }],
+    servers: [{ url: process.env.APPLICATION_URL }],
     components: {
       securitySchemes: {
         BearerAuth: {
@@ -43,7 +43,7 @@ const options: swaggerJsdoc.Options = {
     },
     security: [{ BearerAuth: [] }],
   },
-  apis: [path.resolve(__dirname, "./app/controllers/*.ts")],
+  apis: [path.resolve(__dirname, "./app/controllers/*")],
 };
 
 const swaggerSpec = swaggerJsdoc(options);

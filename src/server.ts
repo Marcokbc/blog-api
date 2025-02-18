@@ -14,7 +14,7 @@ app.use(routers);
 setupSwagger(app);
 
 AppDataSource.initialize().then(async () => {
-  app.listen(3000, () => {
-    console.log("Server is running on port 3000: http://localhost:3000");
+  app.listen(process.env.APPLICATION_PORT, () => {
+    console.log(`Server is running on port ${process.env.APPLICATION_PORT}: ` + process.env.APPLICATION_URL);
   });
 });

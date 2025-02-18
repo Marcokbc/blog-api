@@ -3,6 +3,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import userRepository from "../repositories/UserRepository";
+import { validateSchema } from "../../middlewares/validateMiddleware";
+import { userSchema } from "../validation/userValidation";
 
 dotenv.config();
 
@@ -33,30 +35,38 @@ const authRouter = Router();
  *       400:
  *         description: Credenciais inválidas
  */
-authRouter.post("/login", async (req: Request, res: Response) => {
-  const { username, password } = req.body;
+authRouter.post(
+  "/login",
+  validateSchema(userSchema),
+  async (req: Request, res: Response) => {
+    const { username, password } = req.body;
 
-  if (!username || !password) {
-    return res
-      .status(400)
-      .json({ message: "Usuário e senha são obrigatórios" });
+    if (!username || !password) {
+      return res
+        .status(400)
+        .json({ message: "Usuário e senha são obrigatórios" });
+    }
+
+    const user = await userRepository.findByUsername(username);
+    if (!user) {
+      return res.status(400).json({ message: "Credenciais inválidas" });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Credenciais inválidas" });
+    }
+
+    const token = jwt.sign(
+      { id: user.id, username: user.username },
+      JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
+
+    res.json({ token });
   }
-
-  const user = await userRepository.findByUsername(username);
-  if (!user) {
-    return res.status(400).json({ message: "Credenciais inválidas" });
-  }
-
-  const isPasswordValid = await bcrypt.compare(password, user.password);
-  if (!isPasswordValid) {
-    return res.status(400).json({ message: "Credenciais inválidas" });
-  }
-
-  const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, {
-    expiresIn: "1h",
-  });
-
-  res.json({ token });
-});
+);
 
 export default authRouter;

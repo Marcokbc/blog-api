@@ -3,6 +3,8 @@ import Category from "../entities/Category";
 import categoryRepository from "../repositories/CategoryRepository";
 import { ICategory } from "../interfaces/ICategory";
 import { authenticateToken } from "../../middlewares/authMiddleware";
+import { validateSchema } from "../../middlewares/validateMiddleware";
+import { categorySchema } from "../validation/categoryValidation";
 
 const categoryRouter = Router();
 
@@ -87,6 +89,7 @@ categoryRouter.get(
 categoryRouter.post(
   "/",
   authenticateToken,
+  validateSchema(categorySchema),
   async (req: Request, res: Response): Promise<Response> => {
     try {
       const { name } = req.body;
@@ -133,6 +136,7 @@ categoryRouter.post(
 categoryRouter.patch(
   "/:id",
   authenticateToken,
+  validateSchema(categorySchema),
   async (req: Request, res: Response): Promise<Response> => {
     try {
       const { id } = req.params;

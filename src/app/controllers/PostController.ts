@@ -3,6 +3,8 @@ import Post from "../entities/Post";
 import postRepository from "../repositories/PostRepository";
 import { IPost } from "../interfaces/IPost";
 import { authenticateToken } from "../../middlewares/authMiddleware";
+import { validateSchema } from "../../middlewares/validateMiddleware";
+import { postSchema, postUpdateSchema } from "../validation/postValidation";
 
 const postRouter = Router();
 
@@ -131,6 +133,7 @@ postRouter.get(
 postRouter.post(
   "/",
   authenticateToken,
+  validateSchema(postSchema),
   async (req: Request, res: Response): Promise<Response> => {
     try {
       const { title, content, imageUrl, audioUrl, categoryIds } = req.body;
@@ -186,6 +189,7 @@ postRouter.post(
 postRouter.patch(
   "/:id",
   authenticateToken,
+  validateSchema(postUpdateSchema),
   async (req: Request, res: Response): Promise<Response> => {
     try {
       const { id } = req.params;

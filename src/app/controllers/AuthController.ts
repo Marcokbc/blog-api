@@ -12,49 +12,6 @@ const authRouter = Router();
 
 /**
  * @swagger
- * /auth/register:
- *   post:
- *     summary: Cria um novo usuário
- *     tags: [Autenticação]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               username:
- *                 type: string
- *               password:
- *                 type: string
- *     responses:
- *       201:
- *         description: Usuário criado com sucesso
- *       400:
- *         description: Usuário já existe
- */
-authRouter.post("/register", async (req: Request, res: Response) => {
-  const { username, password } = req.body;
-
-  if (!username || !password) {
-    return res
-      .status(400)
-      .json({ message: "Usuário e senha são obrigatórios" });
-  }
-
-  const existingUser = await userRepository.findByUsername(username);
-  if (existingUser) {
-    return res.status(400).json({ message: "Usuário já existe" });
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await userRepository.createUser(username, hashedPassword);
-
-  res.status(201).json({ message: "Usuário criado com sucesso" });
-});
-
-/**
- * @swagger
  * /auth/login:
  *   post:
  *     summary: Autentica um usuário
